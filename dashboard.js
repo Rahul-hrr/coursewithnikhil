@@ -13,10 +13,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const studentData = {
     "1001": { name: "Aman Sharma", stream: "BCA" },
-    "1002": { name: "Priya Verma", stream: "B.Com" },
+    "1002": { name: "Neha Verma", stream: "B.Com" },
     "1003": { name: "Rohit Singh", stream: "B.Sc" },
-    "1004": { name: "Sneha Gupta", stream: "BA" },
-    "1005": { name: "Arjun Mehta", stream: "B.Tech" }
+    "1004": { name: "Priya Gupta", stream: "BA" },
+    "1005": { name: "Karan Yadav", stream: "B.Tech" },
+    "1006": { name: "Anjali Mehta", stream: "BBA" },
+    "1007": { name: "Arjun Rathore", stream: "MCA" },
+    "1008": { name: "Meena Kumari", stream: "MBA" },
+    "1009": { name: "Suresh Chauhan", stream: "M.Sc" },
+    "1010": { name: "Kavita Joshi", stream: "B.Ed" }
   };
 
   addColumnBtn.addEventListener("click", () => {
@@ -75,7 +80,8 @@ document.addEventListener("DOMContentLoaded", () => {
       config,
       (decodedText) => {
         if (studentData[decodedText] && currentColumn) {
-          currentColumn.value = `${studentData[decodedText].name} (${decodedText}) - ${studentData[decodedText].stream}`;
+          const student = studentData[decodedText];
+          currentColumn.value = `${student.name} (${decodedText}) - ${student.stream}`;
           popup.classList.add("hidden");
           enrollInput.value = "";
           personDetail.textContent = "";
@@ -85,7 +91,7 @@ document.addEventListener("DOMContentLoaded", () => {
         startScanBtn.classList.remove("hidden");
       },
       (err) => {
-        console.log(err);
+        console.log("Scan error:", err);
       }
     );
 
@@ -101,4 +107,3 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
-
