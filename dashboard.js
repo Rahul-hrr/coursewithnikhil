@@ -12,11 +12,11 @@ document.addEventListener("DOMContentLoaded", () => {
   let html5QrCode;
 
   const studentData = {
-    "101": { name: "Aman Sharma", stream: "BCA" },
-    "102": { name: "Priya Verma", stream: "B.Com" },
-    "103": { name: "Rohit Singh", stream: "B.Sc" },
-    "104": { name: "Sneha Gupta", stream: "BA" },
-    "105": { name: "Arjun Mehta", stream: "B.Tech" }
+    "1001": { name: "Aman Sharma", stream: "BCA" },
+    "1002": { name: "Priya Verma", stream: "B.Com" },
+    "1003": { name: "Rohit Singh", stream: "B.Sc" },
+    "1004": { name: "Sneha Gupta", stream: "BA" },
+    "1005": { name: "Arjun Mehta", stream: "B.Tech" }
   };
 
   addColumnBtn.addEventListener("click", () => {
@@ -101,3 +101,4 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+
