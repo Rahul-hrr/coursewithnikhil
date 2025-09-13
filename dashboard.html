@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard Premium</title>
+  <link rel="stylesheet" href="dashboard.css">
+  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+</head>
+<body>
+  <main class="container">
+    <h1>Exam Management Dashboard</h1>
+    <p class="subtitle">Add students by Enrollment No. or Scan QR</p>
+    <button id="addColumn" class="plus">+</button>
+    <div id="columns" class="columns"></div>
+  </main>
+  <div id="popup" class="popup hidden">
+    <h2>Student Verification</h2>
+    <input type="number" id="enrollInput" placeholder="Enter Enrollment No." />
+    <p id="personDetail"></p>
+    <div class="scanner-section">
+      <button id="startScan">📷 Start Scanner</button>
+      <button id="stopScan" class="cancel hidden">✖ Stop Scanner</button>
+      <div id="qr-reader" style="width:100%; margin-top:10px;"></div>
+    </div>
+    <div class="popup-actions">
+      <button id="okBtn">✔ OK</button>
+      <button id="closePopup" class="cancel">✖ Cancel</button>
+    </div>
+  </div>
+  <script src="dashboard.js"></script>
+</body>
+</html>
