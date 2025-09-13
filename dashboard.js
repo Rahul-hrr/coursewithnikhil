@@ -1,112 +1,101 @@
-const addColumnBtn = document.getElementById('addColumn');
-const columnsContainer = document.getElementById('columns');
-const popup = document.getElementById('popup');
-const closePopup = document.getElementById('closePopup');
-const okBtn = document.getElementById('okBtn');
-const enrollInput = document.getElementById('enrollInput');
-const personDetail = document.getElementById('personDetail');
-const qrReader = document.getElementById('qr-reader');
+document.addEventListener("DOMContentLoaded", () => {
+  const addColumnBtn = document.getElementById("addColumn");
+  const columnsDiv = document.getElementById("columns");
+  const popup = document.getElementById("popup");
+  const closePopup = document.getElementById("closePopup");
+  const okBtn = document.getElementById("okBtn");
+  const enrollInput = document.getElementById("enrollInput");
+  const personDetail = document.getElementById("personDetail");
+  const startScanBtn = document.getElementById("startScan");
+  const stopScanBtn = document.getElementById("stopScan");
+  let currentColumn = null;
+  let html5QrCode;
 
-let activeInput = null;
-let html5QrCode = null;
+  const studentData = {
+    "101": { name: "Aman Sharma", stream: "BCA" },
+    "102": { name: "Priya Verma", stream: "B.Com" },
+    "103": { name: "Rohit Singh", stream: "B.Sc" },
+    "104": { name: "Sneha Gupta", stream: "BA" },
+    "105": { name: "Arjun Mehta", stream: "B.Tech" }
+  };
 
-const students = {
-  1001: { name: "Aman Sharma", stream: "BCA" },
-  1002: { name: "Neha Verma", stream: "BCA" },
-  1003: { name: "Rohit Singh", stream: "B.Tech" },
-  1004: { name: "Priya Gupta", stream: "B.Tech" },
-  1005: { name: "Karan Yadav", stream: "B.Sc" },
-  1006: { name: "Anjali Mehta", stream: "B.Sc" },
-  1007: { name: "Arjun Rathore", stream: "MCA" },
-  1008: { name: "Meena Kumari", stream: "MCA" },
-  1009: { name: "Suresh Chauhan", stream: "M.Tech" },
-  1010: { name: "Kavita Joshi", stream: "M.Tech" }
-};
-
-function createColumn() {
-  const col = document.createElement('div');
-  col.className = "column";
-
-  for (let i = 0; i < 5; i++) {
-    const input = document.createElement('input');
-    input.type = "text";
-    input.placeholder = "Click me";
-    input.readOnly = true;
-
-    input.addEventListener('click', () => {
-      activeInput = input;
-      popup.classList.remove('hidden');
-      enrollInput.value = "";
-      personDetail.textContent = "";
-      qrReader.innerHTML = "";
-      startScanner();
-    });
-
-    col.appendChild(input);
-  }
-
-  const plus = document.createElement('button');
-  plus.textContent = "+";
-  plus.className = "plus";
-  plus.addEventListener('click', createColumn);
-  col.appendChild(plus);
-
-  columnsContainer.appendChild(col);
-}
-
-addColumnBtn.addEventListener('click', createColumn);
-
-closePopup.addEventListener('click', () => {
-  popup.classList.add('hidden');
-  stopScanner();
-});
-
-enrollInput.addEventListener('input', () => {
-  const num = enrollInput.value;
-  if (students[num]) {
-    personDetail.textContent = `${students[num].name} – ${num} – ${students[num].stream}`;
-  } else {
-    personDetail.textContent = "Not found!";
-  }
-});
-
-okBtn.addEventListener('click', () => {
-  const num = enrollInput.value;
-  if (activeInput && students[num]) {
-    activeInput.value = students[num].name;
-  }
-  popup.classList.add('hidden');
-  stopScanner();
-});
-
-function startScanner() {
-  if (!html5QrCode) html5QrCode = new Html5Qrcode("qr-reader");
-
-  Html5Qrcode.getCameras().then(devices => {
-    if (devices && devices.length) {
-      html5QrCode.start(
-        devices[0].id,
-        { fps: 10, qrbox: 250 },
-        qrCodeMessage => {
-          if (students[qrCodeMessage]) {
-            enrollInput.value = qrCodeMessage;
-            personDetail.textContent = `${students[qrCodeMessage].name} – ${qrCodeMessage} – ${students[qrCodeMessage].stream}`;
-          } else {
-            enrollInput.value = qrCodeMessage;
-            personDetail.textContent = `Unknown Student – ${qrCodeMessage}`;
-          }
-        }
-      ).catch(err => console.error(err));
-    } else {
-      alert("No camera found. Please allow camera access.");
+  addColumnBtn.addEventListener("click", () => {
+    const column = document.createElement("div");
+    column.className = "column";
+    for (let i = 0; i < 5; i++) {
+      const input = document.createElement("input");
+      input.type = "text";
+      input.placeholder = "Click to add";
+      input.readOnly = true;
+      input.addEventListener("click", () => {
+        currentColumn = input;
+        popup.classList.remove("hidden");
+      });
+      column.appendChild(input);
     }
-  }).catch(err => console.error(err));
-}
+    columnsDiv.appendChild(column);
+  });
 
-function stopScanner() {
-  if (html5QrCode) {
-    html5QrCode.stop().then(() => {
-      html5QrCode.clear();
-    }).catch(err => console.error(err));
-  }
-}
+  closePopup.addEventListener("click", () => {
+    popup.classList.add("hidden");
+    personDetail.textContent = "";
+    enrollInput.value = "";
+    if (html5QrCode) {
+      html5QrCode.stop();
+      stopScanBtn.classList.add("hidden");
+      startScanBtn.classList.remove("hidden");
+    }
+  });
+
+  okBtn.addEventListener("click", () => {
+    const enroll = enrollInput.value.trim();
+    if (studentData[enroll] && currentColumn) {
+      currentColumn.value = `${studentData[enroll].name} (${enroll}) - ${studentData[enroll].stream}`;
+    }
+    popup.classList.add("hidden");
+    personDetail.textContent = "";
+    enrollInput.value = "";
+  });
+
+  enrollInput.addEventListener("input", () => {
+    const enroll = enrollInput.value.trim();
+    if (studentData[enroll]) {
+      personDetail.textContent = `${studentData[enroll].name} - ${studentData[enroll].stream}`;
+    } else {
+      personDetail.textContent = "";
+    }
+  });
+
+  startScanBtn.addEventListener("click", () => {
+    html5QrCode = new Html5Qrcode("qr-reader");
+    const config = { fps: 10, qrbox: 250 };
+
+    html5QrCode.start(
+      { facingMode: "environment" },
+      config,
+      (decodedText) => {
+        if (studentData[decodedText]) {
+          enrollInput.value = decodedText;
+          personDetail.textContent = `${studentData[decodedText].name} - ${studentData[decodedText].stream}`;
+        }
+        html5QrCode.stop();
+        stopScanBtn.classList.add("hidden");
+        startScanBtn.classList.remove("hidden");
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
+
+    startScanBtn.classList.add("hidden");
+    stopScanBtn.classList.remove("hidden");
+  });
+
+  stopScanBtn.addEventListener("click", () => {
+    if (html5QrCode) {
+      html5QrCode.stop();
+      stopScanBtn.classList.add("hidden");
+      startScanBtn.classList.remove("hidden");
+    }
+  });
+});
