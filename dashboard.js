@@ -74,9 +74,11 @@ document.addEventListener("DOMContentLoaded", () => {
       { facingMode: "environment" },
       config,
       (decodedText) => {
-        if (studentData[decodedText]) {
-          enrollInput.value = decodedText;
-          personDetail.textContent = `${studentData[decodedText].name} - ${studentData[decodedText].stream}`;
+        if (studentData[decodedText] && currentColumn) {
+          currentColumn.value = `${studentData[decodedText].name} (${decodedText}) - ${studentData[decodedText].stream}`;
+          popup.classList.add("hidden");
+          enrollInput.value = "";
+          personDetail.textContent = "";
         }
         html5QrCode.stop();
         stopScanBtn.classList.add("hidden");
